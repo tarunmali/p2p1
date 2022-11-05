@@ -87,7 +87,12 @@ const Ml1 = () => {
     // app();
   }, []);
   return (
-    <h1>Ml</h1>
+    <div class="container">
+    <div class="buttons">
+    <button id="class-a">Right Posture</button>
+    <button id="class-b">Wrong Posture</button>
+</div>
+    </div>
     ); 
 
 };
