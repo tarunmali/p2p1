@@ -1,7 +1,32 @@
-import {React,useEffect} from "react"; 
+import {React,useEffect,useContext} from "react"; 
 import * as mobilenet from "@tensorflow-models/mobilenet";
 import * as tf from '@tensorflow/tfjs';
 import * as knnClassifier from '@tensorflow-models/knn-classifier';
+import { Grid, Typography, Paper, makeStyles } from '@material-ui/core';
+import { SocketContext } from '../Context';
+
+const useStyles = makeStyles((theme) => ({
+    video: {
+      width: '550px',
+      [theme.breakpoints.down('xs')]: {
+        width: '300px',
+      },
+    },
+    gridContainer: {
+      justifyContent: 'center',
+      [theme.breakpoints.down('xs')]: {
+        flexDirection: 'column',
+      },
+    },
+    paper: {
+      padding: '10px',
+      border: '2px solid black',
+      margin: '10px',
+    },
+  }));
+
+
+
 const classifier = knnClassifier.create();
 
 const webcamElement = document.getElementById('webcam');
@@ -76,12 +101,36 @@ async function app() {
 
 function Ml ()
 {
-    useEffect(() => {
-        app();
-      }, []);
-    return ( 
-        <h1>Ml</h1>
-        ); 
+    // useEffect(() => {
+    //     app();
+    //   }, []);
+      const { name, callAccepted, myVideo, userVideo, callEnded, stream, call } = useContext(SocketContext);
+      const classes = useStyles();
+
+      return (
+        <Grid container className={classes.gridContainer}>
+          {stream && (
+            <Paper className={classes.paper}>
+              <Grid item xs={12} md={6}>
+                <Typography variant="h5" gutterBottom>{name || 'Name'}</Typography>
+                <video playsInline muted ref={myVideo} autoPlay className={classes.video} />
+              </Grid>
+            </Paper>
+          )}
+          {callAccepted && !callEnded && (
+            <Paper className={classes.paper}>
+              <Grid item xs={12} md={6}>
+                <Typography variant="h5" gutterBottom>{call.name || 'Name'}</Typography>
+                <video playsInline ref={userVideo} autoPlay className={classes.video} />
+              </Grid>
+            </Paper>
+          )}
+        </Grid>
+      );
+
+    // return ( 
+    //     <h1>Ml</h1>
+    //     ); 
     }
 
 
